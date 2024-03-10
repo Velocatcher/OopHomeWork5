@@ -10,7 +10,8 @@ public interface GBRepository {
     User create(User user);
     Optional<User> findById(Long id);
     Optional<User> update(Long userId, User update);
-    boolean delete(Long id);
+    boolean delete(Long userIdDelete);
+
 
     /**
      * Data Access Object (DAO) слой, с методами для работы с БД

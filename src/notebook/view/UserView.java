@@ -44,6 +44,9 @@ public class UserView {
                     String userId = prompt("Enter user id: ");
                     userController.updateUser(userId, createUser());
                 case DELETE:
+                    Long userIdDelete = Long.valueOf(prompt("Enter user id: "));
+                    userController.deleteUser(userIdDelete);
+                    System.out.println("Пользователь удален");
                     break;
                 case LIST:
                     System.out.println("EXIT - выход из программы");
