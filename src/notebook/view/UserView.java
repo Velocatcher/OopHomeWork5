@@ -3,7 +3,7 @@ package notebook.view;
 import notebook.controller.UserController;
 import notebook.model.User;
 import notebook.util.Commands;
-//import notebook.util.UserValidator;
+
 
 import java.util.Locale;
 import java.util.Scanner;
@@ -16,53 +16,64 @@ public class UserView {
     }
 
     public void run(){
-        Commands com;
+        Commands com = null;
+
 
         while (true) {
+
             String command = prompt("Введите команду: ").toUpperCase();
-            com = Commands.valueOf(command);
-            if (com == Commands.EXIT) return;
-            switch (com) {
-                case CREATE:
-                    User u = createUser();
-                    userController.saveUser(u);
-                    break;
-                case READ:
-                    String id = prompt("Идентификатор пользователя: ");
-                    try {
-                        User user = userController.readUser(Long.parseLong(id));
-                        System.out.println(user);
-                        System.out.println();
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                    break;
-                case READALL:
-                    System.out.println(userController.readAll());
-                    break;
-                case UPDATE:
-                    String userId = prompt("Enter user id: ");
-                    userController.updateUser(userId, createUser());
-                case DELETE:
-                    Long userIdDelete = Long.valueOf(prompt("Enter user id: "));
-                    userController.deleteUser(userIdDelete);
-                    System.out.println("Пользователь удален");
-                    break;
-                case LIST:
-                    System.out.println("EXIT - выход из программы");
-                    System.out.println("CREATE - создать пользователя");
-                    System.out.println("READ - вывести пользователя");
-                    System.out.println("READALL - вывести список пользователей");
-                    System.out.println("UPDATE - изменить данные пользователя");
-                    System.out.println("DELETE - удалить пользователя");
-                    System.out.println("LIST - список всех команд");
-                    break;
-                default:
-                    System.out.println("Неверная команда. Для вывода списка команд LIST");
-                    break;
+            try{
+                    com = Commands.valueOf(command);
+                    
+            }catch (IllegalArgumentException e) {
+                System.out.println("Не верная команда");
+                return;
             }
-        }
+                if (com == Commands.EXIT) return;
+                switch (com) {
+                    case CREATE:
+                        User u = createUser();
+                        userController.saveUser(u);
+                        break;
+
+                    case READ:
+                        String id = prompt("Идентификатор пользователя: ");
+                        try {
+                            User user = userController.readUser(Long.parseLong(id));
+                            System.out.println(user);
+                            System.out.println();
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage());
+                        }
+                        break;
+                    case READALL:
+                        System.out.println(userController.readAll());
+                        break;
+                    case UPDATE:
+                        String userId = prompt("Enter user id: ");
+                        userController.updateUser(userId, createUser());
+                        break;
+                    case DELETE:
+                        Long userIdDelete = Long.valueOf(prompt("Enter user id: "));
+                        userController.deleteUser(userIdDelete);
+                        System.out.println("Пользователь удален");
+                        break;
+                    case LIST:
+                        System.out.println("EXIT - выход из программы");
+                        System.out.println("CREATE - создать пользователя");
+                        System.out.println("READ - вывести пользователя");
+                        System.out.println("READALL - вывести список пользователей");
+                        System.out.println("UPDATE - изменить данные пользователя");
+                        System.out.println("DELETE - удалить пользователя");
+                        System.out.println("LIST - список всех команд");
+                        break;
+                }
+                
+            }
     }
+
+
+
 
     private String prompt(String message) {
         Scanner in = new Scanner(System.in);
@@ -82,6 +93,9 @@ public class UserView {
     }
 
     private User createUser() {
+//        String firstName = prompt("Имя: ");
+//        String lastName = prompt("Фамилия: ");
+//        String phone = prompt("Номер телефона: ");
         String firstName = checkLine(prompt("Имя: "));
         String lastName = checkLine(prompt("Фамилия: "));
         String phone = checkLine(prompt("Номер телефона: "));
