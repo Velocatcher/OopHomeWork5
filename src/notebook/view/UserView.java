@@ -22,36 +22,31 @@ public class UserView {
         while (true) {
 
             String command = prompt("Введите команду: ").toUpperCase();
-            try{
-                    com = Commands.valueOf(command);
-                    
-            }catch (IllegalArgumentException e) {
-                System.out.println("Не верная команда");
-                return;
-            }
+            String userId;
+            User user;
+            try {
+
+                com = Commands.valueOf(command);
                 if (com == Commands.EXIT) return;
+
                 switch (com) {
                     case CREATE:
-                        User u = createUser();
-                        userController.saveUser(u);
+                        user = createUser(true);
+                        userController.saveUser(user);
                         break;
-
                     case READ:
-                        String id = prompt("Идентификатор пользователя: ");
-                        try {
-                            User user = userController.readUser(Long.parseLong(id));
-                            System.out.println(user);
-                            System.out.println();
-                        } catch (Exception e) {
-                            System.out.println(e.getMessage());
-                        }
+                        userId = prompt("Введите идентификатор записи: ");
+                        user = userController.readUser(Long.parseLong(userId));
+                        System.out.println(user);
                         break;
                     case READALL:
                         System.out.println(userController.readAll());
                         break;
                     case UPDATE:
-                        String userId = prompt("Enter user id: ");
-                        userController.updateUser(userId, createUser());
+                        userId = prompt("Введите идентификатор записи: ");
+                        user = userController.readUser(Long.parseLong(userId));
+                        System.out.println("\n" + user);
+                        userController.updateUser(userId, createUser(false));
                         break;
                     case DELETE:
                         Long userIdDelete = Long.valueOf(prompt("Enter user id: "));
@@ -68,7 +63,12 @@ public class UserView {
                         System.out.println("LIST - список всех команд");
                         break;
                 }
-                
+            } catch (IllegalArgumentException e) {
+                System.out.println("Команда " + command + " не найдена. Cписок команд - LIST");
+            }
+            catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
             }
     }
 
@@ -80,7 +80,6 @@ public class UserView {
         System.out.print(message);
         return in.nextLine();
     }
-
     public String checkLine(String str) {
         str = str.trim().replace(" ", "");
         if (!str.isEmpty()) {
@@ -92,13 +91,11 @@ public class UserView {
         }
     }
 
-    private User createUser() {
-//        String firstName = prompt("Имя: ");
-//        String lastName = prompt("Фамилия: ");
-//        String phone = prompt("Номер телефона: ");
-        String firstName = checkLine(prompt("Имя: "));
-        String lastName = checkLine(prompt("Фамилия: "));
-        String phone = checkLine(prompt("Номер телефона: "));
+    private User createUser(boolean isCheckNeed) {
+        String firstName = isCheckNeed ? checkLine(prompt("Имя: ")) : prompt("Имя: ");
+        String lastName = isCheckNeed ? checkLine(prompt("Фамилия: ")) : prompt("Фамилия: ");
+        String phone = isCheckNeed ? checkLine(prompt("Номер телефона: ")) : prompt("Номер телефона: ");
         return new User(firstName, lastName, phone);
     }
+
 }
